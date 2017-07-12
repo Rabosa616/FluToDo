@@ -22,6 +22,12 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Clicked="OnDelete" 
+                                  Text="Delete" 
+                                  IsDestructive="true" 
+                                  CommandParameter="{Binding .}" />
+                    </ViewCell.ContextActions>
                     <StackLayout Padding="20,0,0,0" 
                                  HorizontalOptions="StartAndExpand" 
                                  Orientation="Horizontal">

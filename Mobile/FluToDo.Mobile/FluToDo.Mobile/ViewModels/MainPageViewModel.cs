@@ -19,6 +19,7 @@ namespace FluToDo.Mobile.ViewModels
         ObservableCollection<ToDoItem> _items = new ObservableCollection<ToDoItem>();
         private ICommand _fetchItemsCommand;
         private ICommand _addNewTodoItemCommand;
+        private Command _deleteTodoItemCommand;
         #endregion
 
         #region Properties
@@ -45,6 +46,7 @@ namespace FluToDo.Mobile.ViewModels
         }
         public ICommand FetchItemsCommand { get { return _fetchItemsCommand ?? (_fetchItemsCommand = new Command(async () => await onFetchFieldsCommand())); } }
         public ICommand AddNewTodoItemCommand { get { return _addNewTodoItemCommand = _addNewTodoItemCommand ?? new Command(onAddNewTodoItemCommand); } }
+        public ICommand DeleteTodoItemCommand { get { return _deleteTodoItemCommand = _deleteTodoItemCommand ?? new Command(async (object obj) => await onDeleteTodoItemCommand(obj)); } }
         #endregion
 
         #region Constructor
@@ -97,6 +99,30 @@ namespace FluToDo.Mobile.ViewModels
         private void onAddNewTodoItemCommand(object obj)
         {
             _navigationService.NavigateTo<ToDoViewModel>();
+        }
+
+        async Task onDeleteTodoItemCommand(object obj)
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+
+            try
+            {
+                if (obj == null) return;
+                ToDoItem itemToDelete = (ToDoItem)obj;
+                await _service.DeleteItem(itemToDelete.Key);
+                await Application.Current.MainPage.DisplayAlert("Delete OK", $"ToDo item {itemToDelete.Name} has been deleted correctly", "OK");
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Item Not Deleted", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                FetchItemsCommand.Execute(null);
+            }
         }
         #endregion
     }

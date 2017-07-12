@@ -15,5 +15,11 @@ namespace FluToDo.Mobile.Views
             InitializeComponent();
             BindingContext = new MainPageViewModel();
         }
+
+        void OnDelete(object sender, EventArgs e)
+        {
+            var item = (MenuItem)sender;
+            ((MainPageViewModel)BindingContext).DeleteTodoItemCommand.Execute(item.CommandParameter);
+        }
     }
 }
