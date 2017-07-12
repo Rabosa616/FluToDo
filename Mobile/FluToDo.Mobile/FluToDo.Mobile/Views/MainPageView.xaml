@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FluToDo.Mobile"
+             x:Class="FluToDo.Mobile.Views.MainPageView"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>
+    <ListView x:Name="listView" 
+              Margin="20" 
+              ItemsSource="{Binding Items}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout Padding="20,0,0,0" 
+                                 HorizontalOptions="StartAndExpand" 
+                                 Orientation="Horizontal">
+                        <Label Text="{Binding Name}" 
+                               VerticalTextAlignment="Center" />
+                        <Image Source="check.png" 
+                               IsVisible="{Binding IsComplete}" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>

@@ -1,4 +1,6 @@
 ﻿using FluToDo.Mobile.Interfaces;
+using FluToDo.Mobile.ViewModels;
+using FluToDo.Mobile.Views;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
@@ -8,7 +10,10 @@ namespace FluToDo.Mobile.Services
     public class NavigationService : INavigationService
     {
         private static NavigationService _instance;
-        private Dictionary<Type, Type> _viewModelRouting = new Dictionary<Type, Type>();
+        private Dictionary<Type, Type> _viewModelRouting = new Dictionary<Type, Type>()
+        {
+            { typeof(MainPageViewModel), typeof(MainPageView)},
+        };
 
         public static NavigationService Instance
         {
