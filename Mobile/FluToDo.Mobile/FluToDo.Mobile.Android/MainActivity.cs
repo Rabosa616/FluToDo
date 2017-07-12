@@ -9,7 +9,11 @@ using Android.OS;
 
 namespace FluToDo.Mobile.Droid
 {
-    [Activity(Label = "FluToDo.Mobile", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "FluToDo.Mobile", 
+              Icon = "@drawable/icon", 
+              Theme = "@style/MainTheme", 
+              MainLauncher = true, 
+              ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)

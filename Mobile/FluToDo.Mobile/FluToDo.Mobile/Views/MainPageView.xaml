@@ -5,6 +5,16 @@
              x:Class="FluToDo.Mobile.Views.MainPageView"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Name="Add" 
+                     Text="Add" 
+                     Command="{Binding AddNewTodoItemCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource" 
+                            Android="plus.png" 
+                            WinPhone="plus.png" 
+                            iOS="plus.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
     <ListView x:Name="listView" 
               Margin="20" 

@@ -13,6 +13,7 @@ namespace FluToDo.Mobile.Services
         private Dictionary<Type, Type> _viewModelRouting = new Dictionary<Type, Type>()
         {
             { typeof(MainPageViewModel), typeof(MainPageView)},
+            { typeof(ToDoViewModel), typeof(ToDoView)},
         };
 
         public static NavigationService Instance

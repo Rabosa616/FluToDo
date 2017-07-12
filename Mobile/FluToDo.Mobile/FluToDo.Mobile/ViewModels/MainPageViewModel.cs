@@ -18,6 +18,7 @@ namespace FluToDo.Mobile.ViewModels
         INavigationService _navigationService;
         ObservableCollection<ToDoItem> _items = new ObservableCollection<ToDoItem>();
         private ICommand _fetchItemsCommand;
+        private ICommand _addNewTodoItemCommand;
         #endregion
 
         #region Properties
@@ -42,16 +43,29 @@ namespace FluToDo.Mobile.ViewModels
                 OnPropertyChanged("Items");
             }
         }
-        public ICommand FetchItemsCommand { get { return _fetchItemsCommand ?? (_fetchItemsCommand = new Command(async () => await onFetchFieldsCommand())); } }        
+        public ICommand FetchItemsCommand { get { return _fetchItemsCommand ?? (_fetchItemsCommand = new Command(async () => await onFetchFieldsCommand())); } }
+        public ICommand AddNewTodoItemCommand { get { return _addNewTodoItemCommand = _addNewTodoItemCommand ?? new Command(onAddNewTodoItemCommand); } }
         #endregion
 
         #region Constructor
         public MainPageViewModel()
         {
             Title = "Todo List";
+            InitializeServices();
+
+            // Subscribe to events from the Task Detail Page
+            MessagingCenter.Subscribe<ToDoViewModel>(this, "ItemChanged", async (sender) =>
+            {
+                await onFetchFieldsCommand();
+            });
+
+            FetchItemsCommand.Execute(null);
+        }
+
+        private void InitializeServices()
+        {
             _service = ServiceLocator.Instance.Resolve<IApiService>();
             _navigationService = ServiceLocator.Instance.Resolve<INavigationService>();
-            FetchItemsCommand.Execute(null);
         }
         #endregion
 
@@ -78,6 +92,11 @@ namespace FluToDo.Mobile.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private void onAddNewTodoItemCommand(object obj)
+        {
+            _navigationService.NavigateTo<ToDoViewModel>();
         }
         #endregion
     }
