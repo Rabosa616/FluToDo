@@ -39,6 +39,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Helpers\ObservableRangeCollection.cs" />
+    <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Interfaces\IApiService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="MainPage.xaml.cs">
