@@ -26,7 +26,8 @@
     <ListView x:Name="listView" 
               Margin="20" 
               ItemsSource="{Binding Items}" 
-              SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+              IsPullToRefreshEnabled="true">
         <ListView.Behaviors>
             <Behaviours:EventToCommandBehavior EventName="ItemTapped" Command="{Binding EditTodoItemCommand}" EventArgsConverter="{StaticResource ItemTappedConverter}" />
         </ListView.Behaviors>
