@@ -19,6 +19,7 @@ namespace FluToDo.Mobile.ViewModels
         ObservableCollection<ToDoItem> _items = new ObservableCollection<ToDoItem>();
         private ICommand _fetchItemsCommand;
         private ICommand _addNewTodoItemCommand;
+        private Command _editTodoItemCommand;
         private Command _deleteTodoItemCommand;
         #endregion
 
@@ -46,6 +47,7 @@ namespace FluToDo.Mobile.ViewModels
         }
         public ICommand FetchItemsCommand { get { return _fetchItemsCommand ?? (_fetchItemsCommand = new Command(async () => await onFetchFieldsCommand())); } }
         public ICommand AddNewTodoItemCommand { get { return _addNewTodoItemCommand = _addNewTodoItemCommand ?? new Command(onAddNewTodoItemCommand); } }
+        public ICommand EditTodoItemCommand { get { return _editTodoItemCommand = _editTodoItemCommand ?? new Command(async () => await onEditTodoItemCommand()); } }
         public ICommand DeleteTodoItemCommand { get { return _deleteTodoItemCommand = _deleteTodoItemCommand ?? new Command(async (object obj) => await onDeleteTodoItemCommand(obj)); } }
         #endregion
 
@@ -53,25 +55,19 @@ namespace FluToDo.Mobile.ViewModels
         public MainPageViewModel()
         {
             Title = "Todo List";
-            InitializeServices();
-
+            _service = ServiceLocator.Instance.Resolve<IApiService>();
+            _navigationService = ServiceLocator.Instance.Resolve<INavigationService>();
             // Subscribe to events from the Task Detail Page
             MessagingCenter.Subscribe<ToDoViewModel>(this, "ItemChanged", async (sender) =>
             {
                 await onFetchFieldsCommand();
             });
-
             FetchItemsCommand.Execute(null);
-        }
-
-        private void InitializeServices()
-        {
-            _service = ServiceLocator.Instance.Resolve<IApiService>();
-            _navigationService = ServiceLocator.Instance.Resolve<INavigationService>();
         }
         #endregion
 
         #region Private Methods
+
         async Task onFetchFieldsCommand()
         {
             if (IsBusy)
@@ -101,6 +97,29 @@ namespace FluToDo.Mobile.ViewModels
             _navigationService.NavigateTo<ToDoViewModel>();
         }
 
+        async Task onEditTodoItemCommand()
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+
+            try
+            {
+                if (_selectedItem == null) return;
+                _selectedItem.IsComplete = !_selectedItem.IsComplete;
+                await _service.UpdateItem(_selectedItem);
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Item Not Updated", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                FetchItemsCommand.Execute(null);
+            }
+        }
+
         async Task onDeleteTodoItemCommand(object obj)
         {
             if (IsBusy)
@@ -112,7 +131,7 @@ namespace FluToDo.Mobile.ViewModels
                 if (obj == null) return;
                 ToDoItem itemToDelete = (ToDoItem)obj;
                 await _service.DeleteItem(itemToDelete.Key);
-                await Application.Current.MainPage.DisplayAlert("Delete OK", $"ToDo item {itemToDelete.Name} has been deleted correctly", "OK");
+                await Application.Current.MainPage.DisplayAlert("Delete OK",$"ToDo item {itemToDelete.Name} has been deleted correctly", "OK");
             }
             catch (Exception ex)
             {

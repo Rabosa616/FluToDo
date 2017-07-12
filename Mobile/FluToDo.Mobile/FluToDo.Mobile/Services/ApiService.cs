@@ -19,6 +19,8 @@ namespace FluToDo.Mobile.Services
         public ApiService()
         {
             _client = new HttpClient();
+            //_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //_client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
             _client.MaxResponseContentBufferSize = 256000;
         }
 
